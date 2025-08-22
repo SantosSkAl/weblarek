@@ -6,7 +6,7 @@ import { Buyer } from './components/Models/Buyer';
 import { ProductsAPI } from './components/Models/ProductsAPI';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/Api';
-import { IResponseProducts } from './types';
+import { IProduct } from './types';
 
 
 // проверка классов с мок апи
@@ -63,8 +63,8 @@ console.log('')
 const apiInstance = new Api(API_URL)
 const productsApi = new ProductsAPI(apiInstance)
 try {
-    const products: IResponseProducts = await productsApi.get(`/product/`)
-    console.log('список товаров полученных с сервера', products.items)
+    const products: IProduct[] = await productsApi.getProducts()
+    console.log('список товаров полученных с сервера:', products)
 } catch(e) {
     console.log('error:', e)
 }

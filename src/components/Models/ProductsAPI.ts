@@ -1,4 +1,4 @@
-import { IApi, ApiPostMethods } from "../../types";
+import { IApi, IProduct, IOrder, IResponseProducts, IResponseOrder } from "../../types";
 
 
 // Сергей: Нужно попрактиковаться с композицией. 
@@ -14,18 +14,19 @@ import { IApi, ApiPostMethods } from "../../types";
 // реализовать. Но очень мощный на самом деле инструмент. Нужно
 // попробовать и понять его принцип работы.
 
-export class ProductsAPI implements IApi {
+export class ProductsAPI {
     private readonly api: IApi
 
     constructor(api: IApi) {
         this.api = api
     }
 
-    get<T extends object>(uri: string): Promise<T> {
-        return this.api.get(uri)
-    }  
+    getProducts(): Promise<IProduct[]> {
+        return this.api.get<IResponseProducts>('/product/')
+            .then(data => data.items)
+    }
 
-    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>{
-        return this.api.post(uri, data, method)
+    postOrder(data: IOrder): Promise<IResponseOrder> {
+        return this.api.post<IResponseOrder>('/order/', data)
     }
 }

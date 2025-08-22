@@ -23,6 +23,14 @@ export interface IBuyer {
   address: string;
 }
 
+export interface IValidateBuyer {
+    payment: boolean;
+    email: boolean;
+    phone: boolean;
+    address: boolean;
+    buyer: boolean;
+}
+
 export interface IResponseProducts {
     total: number;
     items: IProduct[];
@@ -32,3 +40,11 @@ export interface IOrder extends IBuyer {
     total: number;
     items: string[];
 }
+
+export interface IResponseOrder {
+    id?: string;
+    total?: number;
+    error?: string;
+}
+
+// export type IResponseOrder = { id: string; total: number } | { error: string };

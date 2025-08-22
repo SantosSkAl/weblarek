@@ -10,10 +10,10 @@ export const settings = {
 
 };
 
-export const BUYER_FIELDS_VALIDATORS = {
-  EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i,
-  PHONE_CHARS_REGEX: /^[+\d\s().-]+$/,
-  PHONE_MIN_DIGITS: 7,
-  PHONE_MAX_DIGITS: 15,
-} as const;
+// export const BUYER_FIELDS_VALIDATORS = {
+//   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i,
+//   PHONE_CHARS_REGEX: /^[+\d\s().-]+$/,
+//   PHONE_MIN_DIGITS: 7,
+//   PHONE_MAX_DIGITS: 15,
+// } as const;
 

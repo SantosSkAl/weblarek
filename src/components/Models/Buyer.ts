@@ -1,5 +1,5 @@
-import { IBuyer, TPayment } from "../../types";
-import { BUYER_FIELDS_VALIDATORS as BFV } from "../../utils/constants";
+import { IBuyer, IValidateBuyer, TPayment } from "../../types";
+// import { BUYER_FIELDS_VALIDATORS as BFV } from "../../utils/constants";
 
 export class Buyer implements IBuyer {
     payment: TPayment = ''
@@ -30,21 +30,27 @@ export class Buyer implements IBuyer {
         this.address = '';
     }
 
-    // validateBuyer(): boolean {
-    //     return this.payment !== '' && this.email !== ''
-    //            && this.phone !== '' && this.address !== ''
-    // }
-
-    validateBuyer(): boolean {
-        const paymentIsValid = this.payment !== ''
-        const emailIsValid = BFV.EMAIL_REGEX.test(this.email.trim())
-        const phoneDigits = this.phone.trim().replace(/\D/g, '');
-        const phoneIsValid = 
-            BFV.PHONE_CHARS_REGEX.test(this.phone.trim()) &&
-            phoneDigits.length >= BFV.PHONE_MIN_DIGITS &&
-            phoneDigits.length <= BFV.PHONE_MAX_DIGITS
-        const addressIsValid = this.address.trim().length > 7
-        return paymentIsValid && emailIsValid
-               && phoneIsValid && addressIsValid
+    validateBuyer(): IValidateBuyer {
+        return {
+            payment: this.payment !== '',
+            email: this.email !== '',
+            phone: this.phone !== '',
+            address: this.address !== '',
+            buyer: this.payment !== '' && this.email !== ''
+                   && this.phone !== '' && this.address !== ''
+        }
     }
+
+    // validateBuyer(): boolean {
+    //     const paymentIsValid = this.payment !== ''
+    //     const emailIsValid = BFV.EMAIL_REGEX.test(this.email.trim())
+    //     const phoneDigits = this.phone.trim().replace(/\D/g, '');
+    //     const phoneIsValid = 
+    //         BFV.PHONE_CHARS_REGEX.test(this.phone.trim()) &&
+    //         phoneDigits.length >= BFV.PHONE_MIN_DIGITS &&
+    //         phoneDigits.length <= BFV.PHONE_MAX_DIGITS
+    //     const addressIsValid = this.address.trim().length > 7
+    //     return paymentIsValid && emailIsValid
+    //            && phoneIsValid && addressIsValid
+    // }
 }
