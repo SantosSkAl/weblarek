@@ -1,4 +1,5 @@
 import { IBuyer, IValidateBuyer, TPayment } from "../../types";
+import { IEvents } from "../base/Events";
 // import { BUYER_FIELDS_VALIDATORS as BFV } from "../../utils/constants";
 
 export class Buyer implements IBuyer {
@@ -7,11 +8,14 @@ export class Buyer implements IBuyer {
     phone: string = ''
     address: string = ''
 
+    constructor(protected events: IEvents) {}
+
     setBuyer(buyerUpdates: Partial<IBuyer>): void {
         this.payment = buyerUpdates.payment ?? this.payment;
         this.email   = buyerUpdates.email   ?? this.email;
         this.phone   = buyerUpdates.phone   ?? this.phone;
         this.address = buyerUpdates.address ?? this.address;
+        this.events.emit('buyer:change')
     }
 
     getBuyer(): IBuyer {
@@ -28,14 +32,15 @@ export class Buyer implements IBuyer {
         this.email = '';
         this.phone = '';
         this.address = '';
+        this.events.emit('buyer:change')
     }
 
     validateBuyer(): IValidateBuyer {
         return {
-            payment: this.payment !== '',
-            email: this.email !== '',
-            phone: this.phone !== '',
-            address: this.address !== '',
+            payment: this.payment !== '' ? '' : 'Необходимо выбрать вид оплаты',
+            email: this.email !== '' ? '' : 'Необходимо указать email',
+            phone: this.phone !== '' ? '' : 'Необходимо указать телефон',
+            address: this.address !== '' ? '' : 'Необходимо указать адрес',
             buyer: this.payment !== '' && this.email !== ''
                    && this.phone !== '' && this.address !== ''
         }

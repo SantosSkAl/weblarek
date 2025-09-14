@@ -24,10 +24,10 @@ export interface IBuyer {
 }
 
 export interface IValidateBuyer {
-    payment: boolean;
-    email: boolean;
-    phone: boolean;
-    address: boolean;
+    payment: string;
+    email: string;
+    phone: string;
+    address: string;
     buyer: boolean;
 }
 
@@ -48,3 +48,9 @@ export interface IResponseOrder {
 }
 
 // export type IResponseOrder = { id: string; total: number } | { error: string };
+
+export interface ICardActions {
+    onClick: () => void;
+}
+
+export type TBuyButtonState = 'buy' | 'remove' | 'unavailable'

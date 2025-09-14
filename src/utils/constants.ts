@@ -10,6 +10,15 @@ export const settings = {
 
 };
 
+/* Константа соответствий категорий товара модификаторам, используемым для отображения фона категории. */
+export const categoryMap = {
+  'софт-скил': 'card__category_soft',
+  'хард-скил': 'card__category_hard',
+  'кнопка': 'card__category_button',
+  'дополнительное': 'card__category_additional',
+  'другое': 'card__category_other',
+};
+
 // export const BUYER_FIELDS_VALIDATORS = {
 //   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i,
 //   PHONE_CHARS_REGEX: /^[+\d\s().-]+$/,
