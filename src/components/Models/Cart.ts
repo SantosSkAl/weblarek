@@ -27,7 +27,7 @@ export class Cart {
 
     clearCart(): void {
         this.cart = []
-        this.events.emit('basket:change')
+        this.events.emit('cart:change')
     }
 
     totalCart(): number {

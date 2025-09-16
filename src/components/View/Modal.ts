@@ -35,11 +35,13 @@ export class Modal extends Component<IModal> {
 
     show() {
         this.container.classList.add('modal_active')
+        // блокировка прокрутки основной страницы
+        document.body.style.overflow = 'hidden'
     }
 
     hide() {
         this.container.classList.remove('modal_active')
         this.contentElement.replaceChildren()
-        // this.modalElement.innerHTML = ''
+        document.body.style.removeProperty('overflow')
     }
 }

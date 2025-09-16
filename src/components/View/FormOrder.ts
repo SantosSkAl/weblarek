@@ -30,20 +30,8 @@ export class FormOrder extends Form<IFormOrder> {
     }
 
     set payment(value: TPayment) { // 'card' | 'cash' | ''
-        switch (value) {
-            case 'card':
-                this.paymentCardButton.classList.add('button_alt-active')
-                this.paymentCashButton.classList.remove('button_alt-active')
-                break
-            case 'cash':
-                this.paymentCashButton.classList.add('button_alt-active')
-                this.paymentCardButton.classList.remove('button_alt-active')
-                break
-            case '':
-                this.paymentCardButton.classList.remove('button_alt-active')
-                this.paymentCashButton.classList.remove('button_alt-active')
-                break    
-        }
+        this.paymentCardButton.classList.toggle('button_alt-active', value === 'card')
+        this.paymentCashButton.classList.toggle('button_alt-active', value === 'cash')
     }
 
     set address(value: string) {

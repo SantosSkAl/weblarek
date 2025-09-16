@@ -63,7 +63,6 @@ const modal = new Modal(events, modalElement)
 
 const cardModal = new CardModal(cloneTemplate(cardModalTemplate), {
     onClick: () => {
-        // if (!products.getSelectedProduct()) return
         if (!products.getSelectedProduct()?.price) {
             cardModal.buyButtonState= 'unavailable'
             return
@@ -72,13 +71,18 @@ const cardModal = new CardModal(cloneTemplate(cardModalTemplate), {
         if (selectedProduct) {
             const inCart = cart.isInCart(selectedProduct.id)
             if (inCart) {
+                // все таки не до конца понимаю нужно ли здесь делать промежуточный шаг
+                // с дополнительным событием, которое просто дернет модель.
+                // Если считать, что этот onclick часть вьюхи, по логике нужно на завязывать
+                // вьюху с моделью. Но если onCklick часть презентра, тогда все пучком?
                 cart.removeFromCart(selectedProduct)
+                // events.emit('basket:removeItem', selectedProduct)
                 cardModal.buyButtonState = 'buy'
             } else {
                 cart.addToCart(selectedProduct)
+                // events.emit('basket:addItem', selectedProduct)
                 cardModal.buyButtonState = 'remove'
             }
-            events.emit('basket:change')
             events.emit('modal:close')
         }
     }
@@ -131,19 +135,14 @@ events.on('card:open', (item: IProduct) => {
     }
     modal.content = cardModal.render(item)
     modal.show()
-    // document.querySelector('.page')!.classList.add('page__wrapper_locked')
-    document.body.style.overflow = 'hidden'
-    // document.querySelector('.page')!.addEventListener('wheel', e => e.preventDefault(), { passive: false })
 })
 
 events.on('modal:close', () => {
     modal.hide()
-    // document.querySelector('.page')!.classList.remove('page__wrapper_locked')
-    document.body.style.removeProperty('overflow')
-    // document.querySelector('.page')!.removeEventListener('wheel', e => e.preventDefault(), { passive: false })
 })
 
-events.on('basket:change', () => {
+events.on('cart:change', () => {
+    renderBasket()
     header.counter = cart.sizeCart()
 })
 
@@ -152,45 +151,37 @@ events.on('products:change', () => {
 })
 // products.setProducts(apiProducts.items)
 
-// events.on('cart:change', () => {
-//     renderBasket()
-// })
-
 events.on('basket:open', () => {
-    renderBasket()
     modal.content = basket.render()
     modal.show()
-    document.body.style.overflow = 'hidden'
 })
 
 events.on('basket:removeItem', (item: IProduct) => {
     cart.removeFromCart(item)
-    renderBasket()
-    modal.content = basket.render()
 })
+
+// events.on('basket:addItem', (item: IProduct) => {
+//     cart.addToCart(item)
+// })
 
 events.on('order:open', () => {
     formOrder.errors = ''
     modal.content = formOrder.render()
     modal.show()
-    document.body.style.overflow = 'hidden'
 })
 
 events.on('contacts:open', () => {
     formContacts.errors = ''
     modal.content = formContacts.render()
     modal.show()
-    document.body.style.overflow = 'hidden'
 })
 
 events.on(`paymentSelect:card`, () => {
     buyer.setBuyer({ payment: 'card'})
-    formOrder.payment = 'card'
 })
 
 events.on(`paymentSelect:cash`, () => {
     buyer.setBuyer({ payment: 'cash'})
-    formOrder.payment = 'cash'
 })
 
 events.on('form:change', (data: { field: keyof IBuyer, value: string | TPayment }) => {
@@ -198,6 +189,10 @@ events.on('form:change', (data: { field: keyof IBuyer, value: string | TPayment 
 })
 
 events.on(`buyer:change`, () => {
+    formOrder.payment = buyer.payment
+    formOrder.address = buyer.address
+    formContacts.phone = buyer.phone
+    formContacts.email = buyer.email
     const {payment, address, phone, email} = buyer.validateBuyer() // errors
     if (!payment && !address) {
         formOrder.valid = true
@@ -219,7 +214,6 @@ events.on(`buyer:change`, () => {
 //     success.total = cart.totalCart()
 //     modal.content = success.render()
 //     modal.show()
-//     document.body.style.overflow = 'hidden'
 // })
 
 events.on('success:open', async () => {
@@ -229,6 +223,7 @@ events.on('success:open', async () => {
             total: cart.totalCart(),
             items: cart.getCart().map(item => item.id)
         }
+        console.log('объект запроса:', order)
         let confirmOrder: number | string = ''
         try {
             const response: IResponseOrder = await productsApi.postOrder(order)
@@ -238,32 +233,28 @@ events.on('success:open', async () => {
                 success.total = confirmOrder
                 modal.content = success.render()
                 modal.show()
-                document.body.style.overflow = 'hidden'
+                cart.clearCart()
+                buyer.resetBuyer()
             } else if (response.error) {
                 confirmOrder = response.error
                 modal.hide()
-                document.body.style.removeProperty('overflow')
                 alert(confirmOrder)
             }
             console.log('подтверждение заказа:', confirmOrder)
         } catch(e) {
             console.log('error:', e)
             modal.hide()
-            document.body.style.removeProperty('overflow')
             alert(e)
         }
     } else {
         console.log('данные пользователя не валидны')
         modal.hide()
-        document.body.style.removeProperty('overflow')
         alert('данные пользователя не валидны')
     }
 })
 
 events.on('success:close', () => {
-    cart.clearCart()
     modal.hide()
-    document.body.style.removeProperty('overflow')
 })
 
 

@@ -21,10 +21,6 @@ export class Basket extends Component<IBasket> {
             e.preventDefault()
             this.events.emit('order:open')
         })
-
-        // прокрутка для длинного (>3) списка позиций
-        this.basketListElement.style.maxHeight = '52vh'
-        this.basketListElement.style.overflowY = 'auto'
     }
 
     set basketList(items: HTMLElement[]) {
@@ -36,7 +32,6 @@ export class Basket extends Component<IBasket> {
             this.basketListElement.style.color = 'gray'
             this.placeOrderButton.disabled = true
         }
-        this.events.emit('basket:change')
     }
 
     set total(value: number) {

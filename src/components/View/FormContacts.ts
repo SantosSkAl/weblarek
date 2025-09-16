@@ -26,6 +26,6 @@ export class FormContacts extends Form<IFormContacts> {
     }
 
     set email(value: string) {
-        this.phoneInput.value = value
+        this.emailInput.value = value
     }
 }
